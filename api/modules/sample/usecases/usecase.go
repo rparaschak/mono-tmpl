@@ -1,3 +1,7 @@
 package usecases
 
-type UseCase struct{}
+import "github.com/rparaschak/mono-tmpl/api/modules"
+
+type UseCase struct {
+	modules.GlobalDependencies
+}

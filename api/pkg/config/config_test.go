@@ -18,6 +18,10 @@ func TestLoadHTTPServerFromEnv(t *testing.T) {
 	if cfg.HTTPServer.Port != 7000 {
 		t.Fatalf("HTTPServer.Port = %d, want %d", cfg.HTTPServer.Port, 7000)
 	}
+
+	if cfg.Database.Env != "test" {
+		t.Fatalf("Database.Env = %q, want %q", cfg.Database.Env, "test")
+	}
 }
 
 func TestLoadHTTPServerDefaults(t *testing.T) {

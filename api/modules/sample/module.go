@@ -3,18 +3,21 @@ package sample
 import (
 	"github.com/danielgtaylor/huma/v2"
 
+	"github.com/rparaschak/mono-tmpl/api/modules"
 	"github.com/rparaschak/mono-tmpl/api/modules/sample/handlers"
 	"github.com/rparaschak/mono-tmpl/api/modules/sample/usecases"
 )
 
 type Module struct {
+	Deps     modules.GlobalDependencies
 	UseCases *usecases.UseCase
 	Handlers *handlers.Handlers
 }
 
-func New() *Module {
-	useCases := &usecases.UseCase{}
+func New(deps modules.GlobalDependencies) *Module {
+	useCases := &usecases.UseCase{GlobalDependencies: deps}
 	return &Module{
+		Deps:     deps,
 		UseCases: useCases,
 		Handlers: &handlers.Handlers{
 			UseCases: useCases,

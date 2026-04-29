@@ -1,9 +1,14 @@
 package config
 
-import "github.com/caarlos0/env/v11"
+import (
+	"github.com/caarlos0/env/v11"
+
+	"github.com/rparaschak/mono-tmpl/api/pkg/database"
+)
 
 type Config struct {
 	HTTPServer HTTPServerConfig
+	Database   database.Config
 }
 
 type HTTPServerConfig struct {

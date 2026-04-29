@@ -10,5 +10,5 @@ import (
 func RegisterRoutes(parentRouter huma.API, h *handlers.Handlers) {
 	groups := routing.NewBuilder(parentRouter, "/samples", "Samples").Groups()
 
-	routing.GET(groups.Public, "", "List Samples", h.ListSamplesHandler)
+	routing.GET(groups.Public, "", "Get Samples", h.GetSamplesHandler)
 }
