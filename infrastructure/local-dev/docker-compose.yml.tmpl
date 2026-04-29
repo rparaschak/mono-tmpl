@@ -1,8 +1,8 @@
-name: mono-tmpl
+name: {XXX}
 
 services:
-  mono-tmpl-postgres:
-    container_name: mono-tmpl-postgres
+  {XXX}-postgres:
+    container_name: {XXX}-postgres
     image: supabase/postgres:17.4.1.036
     ports:
       - "5002:5432"
@@ -10,12 +10,12 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: "docker"
-      POSTGRES_DB: "mono-tmpl"
+      POSTGRES_DB: "{XXX}"
     networks:
-      - mono-tmpl-network
+      - {XXX}-network
 
-  mono-tmpl-pgadmin:
-    container_name: mono-tmpl-pgadmin
+  {XXX}-pgadmin:
+    container_name: {XXX}-pgadmin
     image: dpage/pgadmin4:9.4
     ports:
       - "5003:80"
@@ -25,10 +25,10 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
-      - mono-tmpl-network
+      - {XXX}-network
 
-  mono-tmpl-minio:
-    container_name: mono-tmpl-minio
+  {XXX}-minio:
+    container_name: {XXX}-minio
     image: minio/minio:RELEASE.2025-04-08T15-41-24Z
     command: server /data --console-address ":9001"
     ports:
@@ -40,7 +40,7 @@ services:
     volumes:
       - minio-data:/data
     networks:
-      - mono-tmpl-network
+      - {XXX}-network
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 10s
@@ -53,5 +53,5 @@ volumes:
   minio-data:
 
 networks:
-  mono-tmpl-network:
+  {XXX}-network:
     driver: bridge

@@ -22,17 +22,24 @@ if [[ ! -d "$infrastructure_dir" ]]; then
   exit 1
 fi
 
-files=()
-while IFS= read -r file; do
-  files+=("$file")
-done < <(rg -l '\{XXX\}' "$infrastructure_dir")
+targets=()
 
-if [[ ${#files[@]} -eq 0 ]]; then
-  echo "No {XXX} placeholders found under $infrastructure_dir" >&2
+while IFS= read -r template; do
+  output="${template%.tmpl}"
+  perl -0pe "s/\\{XXX\\}/$project_name/g" "$template" > "$output"
+  targets+=("$output")
+done < <(find "$infrastructure_dir" -type f -name '*.tmpl' | sort)
+
+while IFS= read -r file; do
+  perl -0pi -e "s/\\{XXX\\}/$project_name/g" "$file"
+  targets+=("$file")
+done < <(rg -l --glob '!*.tmpl' '\{XXX\}' "$infrastructure_dir")
+
+if [[ ${#targets[@]} -eq 0 ]]; then
+  echo "No infrastructure templates or {XXX} placeholders found under $infrastructure_dir" >&2
   exit 1
 fi
 
-for file in "${files[@]}"; do
-  perl -0pi -e "s/\\{XXX\\}/$project_name/g" "$file"
-  echo "$file"
+for target in "${targets[@]}"; do
+  echo "$target"
 done
