@@ -1,0 +1,57 @@
+name: {XXX}
+
+services:
+  {XXX}-postgres:
+    container_name: {XXX}-postgres
+    image: supabase/postgres:17.4.1.036
+    ports:
+      - "5002:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "docker"
+      POSTGRES_DB: "{XXX}"
+    networks:
+      - {XXX}-network
+
+  {XXX}-pgadmin:
+    container_name: {XXX}-pgadmin
+    image: dpage/pgadmin4:9.4
+    ports:
+      - "5003:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - {XXX}-network
+
+  {XXX}-minio:
+    container_name: {XXX}-minio
+    image: minio/minio:RELEASE.2025-04-08T15-41-24Z
+    command: server /data --console-address ":9001"
+    ports:
+      - "5004:9000"
+      - "5005:9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    volumes:
+      - minio-data:/data
+    networks:
+      - {XXX}-network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  postgres-data:
+  pgadmin-data:
+  minio-data:
+
+networks:
+  {XXX}-network:
+    driver: bridge
