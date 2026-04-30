@@ -39,7 +39,6 @@ modules/[module]/
 - Reusable: callable from handlers, jobs, event handlers, or other usecases.
 - Composable: complex workflows should compose multiple usecases.
 - Foundation: jobs, event handlers, and HTTP handlers are based on usecases.
-- Primary testing target: business logic should be tested in usecase tests.
 
 ### Rules
 

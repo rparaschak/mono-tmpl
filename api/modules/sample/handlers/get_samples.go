@@ -9,7 +9,7 @@ import (
 
 type GetSamplesRequest struct {
 	Prefix    string `query:"prefix"`
-	SortField string `query:"sortField" enum:"name,createdAt"`
+	SortField string `query:"sortField" enum:"name,created_at"`
 	SortOrder string `query:"sortOrder" enum:"ASC,DESC"`
 }
 
