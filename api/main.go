@@ -10,10 +10,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/danielgtaylor/huma/v2"
+	"github.com/rparaschak/mono-tmpl/api/internal/bootstrap"
 	"github.com/rparaschak/mono-tmpl/api/modules"
 	"github.com/rparaschak/mono-tmpl/api/pkg/app"
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
-	"github.com/rparaschak/mono-tmpl/api/wiring"
 )
 
 func main() {
@@ -31,7 +32,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	application := app.New(cfg, wiring.RouteRegistrar(deps))
+	application := app.New(cfg, func(api huma.API) {
+		bootstrap.RegisterRoutes(api, deps)
+	})
 
 	go func() {
 		slog.Info("starting server", "addr", application.Server.Addr, "env", cfg.HTTPServer.Env)
