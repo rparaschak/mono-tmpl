@@ -96,7 +96,7 @@
           },
           "samples": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/SampleDTO"
             },
             "type": [
               "array",
@@ -106,6 +106,31 @@
         },
         "required": [
           "samples"
+        ],
+        "type": "object"
+      },
+      "SampleDTO": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "readOnly": true,
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "readOnly": true,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt"
         ],
         "type": "object"
       }
@@ -120,6 +145,40 @@
     "/samples": {
       "get": {
         "operationId": "get-samples",
+        "parameters": [
+          {
+            "explode": false,
+            "in": "query",
+            "name": "prefix",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "explode": false,
+            "in": "query",
+            "name": "sortField",
+            "schema": {
+              "enum": [
+                "name",
+                "createdAt"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "explode": false,
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
