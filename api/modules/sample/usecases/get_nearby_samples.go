@@ -19,9 +19,11 @@ func (u UseCase) GetNearbySamples(ctx context.Context, input GetNearbySamplesInp
 	geolocation := database.NewGeolocation(input.Longitude, input.Latitude)
 
 	return gorm.G[persistence.Sample](u.DB).
-		Order(clause.Expr{
-			SQL:  "geolocation <-> ?::geography",
-			Vars: []any{geolocation},
+		Order(clause.OrderBy{
+			Expression: clause.Expr{
+				SQL:  "geolocation <-> ?::geography",
+				Vars: []any{geolocation},
+			},
 		}).
 		Limit(input.Limit).
 		Find(ctx)

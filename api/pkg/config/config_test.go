@@ -25,6 +25,9 @@ func TestLoadHTTPServerFromEnv(t *testing.T) {
 }
 
 func TestLoadHTTPServerDefaults(t *testing.T) {
+	t.Setenv("APP_ENV", "")
+	t.Setenv("APP_PORT", "")
+
 	cfg, err := Load()
 	if err != nil {
 		t.Fatalf("Load() error = %v", err)
