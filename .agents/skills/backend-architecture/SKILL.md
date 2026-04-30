@@ -19,12 +19,12 @@ modules/[module]/
 ├── router.go           # Route definitions
 ├── handlers/           # HTTP handlers
 ├── usecases/           # Business logic
-├── models/             # Domain models
+├── persistence/        # Persistence models
 ├── contracts/          # DTOs
 ├── events/             # Event handlers
 ├── jobs/               # Background jobs
 ├── mcp/                # AI assistant tools
-├── testing/            # Test factories and data
+├── testkit/            # Test factories and data
 └── errors/             # Business errors
 ```
 

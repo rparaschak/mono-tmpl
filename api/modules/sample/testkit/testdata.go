@@ -2,6 +2,10 @@ package testkit
 
 import "github.com/rparaschak/mono-tmpl/api/modules/sample/contracts"
 
+type SampleListResponse struct {
+	Samples []contracts.SampleDTO `json:"samples"`
+}
+
 func InputNamed(name string) contracts.SampleInputDTO {
 	input := WarsawInput()
 	input.Name = name

@@ -1,6 +1,6 @@
 //go:build integration
 
-package sample_test
+package handlers_test
 
 import (
 	"net/http"
@@ -35,7 +35,7 @@ func TestGetNearbySamplesAPI(t *testing.T) {
 				Longitude: -118.2437,
 			})
 
-			var body sampleListResponse
+			var body testkit.SampleListResponse
 			env.Expect.GET("/samples/nearby").
 				WithQuery("lat", 40.7128).
 				WithQuery("lng", -74.0060).

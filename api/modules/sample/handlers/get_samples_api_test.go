@@ -1,6 +1,6 @@
 //go:build integration
 
-package sample_test
+package handlers_test
 
 import (
 	"net/http"
@@ -25,7 +25,7 @@ func TestGetSamplesAPI(t *testing.T) {
 			factory.SetCreatedAt(older, time.Date(2026, 4, 29, 12, 0, 0, 0, time.UTC))
 			factory.SetCreatedAt(newer, time.Date(2026, 4, 30, 12, 0, 0, 0, time.UTC))
 
-			var body sampleListResponse
+			var body testkit.SampleListResponse
 			env.Expect.GET("/samples").
 				WithQuery("prefix", prefix).
 				Expect().
@@ -44,7 +44,7 @@ func TestGetSamplesAPI(t *testing.T) {
 			factory.Create(testkit.InputNamed(factory.UniqueName("beta")))
 			first := factory.Create(testkit.InputNamed(prefix + "-1"))
 
-			var body sampleListResponse
+			var body testkit.SampleListResponse
 			env.Expect.GET("/samples").
 				WithQuery("prefix", prefix).
 				WithQuery("sortField", "name").

@@ -20,6 +20,7 @@ description: Backend testing guidance and checklist.
 
 ## Common Rules
 - Build tag: `//go:build integration`
+- File names: handler tests end with `_api_test.go` and usecase tests end with `_usecase_test.go`
 - Max Depth = 3 
 - API test files are named by endpoint behavior, for example `create_sample_api_test.go`.
 - API Test Structure: `TestFunction` → `t.Run("METHOD /endpoint")` → `t.Run("behavior")`
