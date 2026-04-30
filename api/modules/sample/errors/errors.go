@@ -1,5 +1,9 @@
 package errors
 
-import "github.com/danielgtaylor/huma/v2"
+import (
+	"net/http"
 
-var ErrSampleNotFound = huma.Error404NotFound("sample not found")
+	"github.com/rparaschak/mono-tmpl/api/pkg/apperror"
+)
+
+var ErrSampleNotFound = apperror.New(http.StatusNotFound, "sample_not_found", "sample not found")

@@ -8,8 +8,8 @@ description: Backend architecture and implementation conventions for module stru
 ## Architecture
 
 ```text
-Request <-(DTO)-> Handler|MCP <-(Domain)-> UseCase <-(Domain)-> Persistence
-Trigger(Job,Event) -> (Domain)-> UseCase <-(Domain)-> Persistence
+Request <-(DTO)-> Handler|MCP <-(UsecaseInput|Primitive)-> UseCase <-(Domain)-> Persistence
+Trigger(Job,Event) -> (UsecaseInput|Primitive)-> UseCase <-(Domain)-> Persistence
 ```
 
 ## Module Structure
@@ -44,42 +44,32 @@ modules/[module]/
 
 - Use GORM generics: `gorm.G[Model](db)`.
 - Keep usecase inputs transport-agnostic; do not add `json`, schema, or HTTP-specific tags to `usecases/` types.
-- Do not import `contracts/` into usecases; map transport DTOs before the usecase boundary.
-- Prefer explicit `Input` structs for command-style usecases over accepting `models.Model`.
-- Do not create `Input` structs that only wrap a single primitive value or ID; accept that value directly, e.g. `DeleteSample(ctx, sampleId uuid.UUID)`.
-- Accept `models.Model` only when the whole domain object is truly the business input, not just a convenient field container.
-- Prefer batch usecases over Preload/Join; compose separate usecases instead.
-- Never use JOIN/PRELOAD on models from another module; use batch instead.
-- No database queries inside loops; use `WHERE id IN (?)` patterns.
+- Take Input structs or primitives for simple inputs, e.g. `DeleteSample(ctx, sampleId uuid.UUID)`.
+- Prefer batch(e.g. GetSamplesByIdsBatch) usecases over Preload/Join; compose separate usecases instead.
+- Batch usecases return maps, e.g. `map[uuid.UUID]Model{}`.
+- Usecases might share Input models defined in `usecases.go`
+- No database queries inside loops.
 - No protective coding; do not search before deleting/updating.
 - Never use `fmt.Errorf`; return predefined errors from `errors.go`.
 
 ## Error Handling
 
-- Modules define errors in `[module]/errors/errors.go` as `&coreErrors.AppError{Status: http.StatusNotFound, Message: "..."}`.
+- Modules define errors in `[module]/errors/errors.go` with `pkg/apperror`.
+- Keep `apperror.New(...)` declarations on one line, e.g. `var ErrSampleNotFound = apperror.New(http.StatusNotFound, "sample_not_found", "sample not found")`.
+- Use stable snake_case error codes. Error messages are short, lowercase, and safe to return to clients.
+- Use `apperror.WithDetails(err, details)` or `err.WithDetails(details)` for per-request details; do not mutate package-level errors.
+- Usecases translate known infrastructure errors into predefined module errors.
+- Handlers return usecase errors directly. Huma uses `GetStatus()` from `apperror.AppError` to set the HTTP status.
 - `pkg/` packages use `errors.New()`.
 
-## REST Handlers
+## API Handlers
 
-- File naming: `[action]_[resource].go` (one handler per file).
-- Naming: `[Action][Entity]Handler`, `[Action][Entity]Request`, `[Action][Entity]Response`.
-- Params: `camelCase`, `uuid.UUID` for IDs, struct tags (`format:"uuid"`, `minLength:"1"`, `enum:"..."`).
+- No business logic in handlers; delegate to usecases.
 - Body fields are required by default; use `omitempty` or `omitzero` for optional fields.
 - `required` tag is only for header/query params (optional by default).
-- No business logic in handlers; delegate to usecases.
-- Registration pattern: `routing.POST(groups.Auth, "", "Create Sample", h.CreateSampleHandler)`.
-- Keep read DTOs response-only. Request bodies must bind dedicated input DTOs from `contracts/`, not response DTOs with `readOnly` fields.
 - Reuse shared `*InputDTO` contracts across create/update handlers when the writable shape is the same; introduce operation-specific input DTOs only when the write shapes differ.
-
-## Handler/Usecase Communication
-
-- Keep the mapping at the boundary: handlers map `contracts/*InputDTO` into `usecases/*Input` or domain values before calling a usecase.
-- Handlers must not pass `contracts` DTO types into usecases.
-- `contracts/*InputDTO` is transport-only and may be reused across handlers when the writable HTTP payload shape is the same.
-- If create and update belong to the same command family, prefer the same signature style for both, ideally explicit usecase input structs.
-- If a model includes DB-managed fields like `Id`, `CreatedAt`, or `UpdatedAt`, do not use that model as the handler-to-usecase input shape.
-- Using `models.Model` in a trivial create usecase is an allowed shortcut, but it is an exception and not the default rule.
-- Once a usecase gains validation, orchestration, derived fields, permissions, or events, replace `models.Model` input with an explicit `usecases.Input`.
+- Reuse `*DTO` for read operation if possible.
+- Never pass `contracts` DTO types into usecases.
 
 ## Events
 

@@ -1,0 +1,69 @@
+version: "2"
+
+run:
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - errcheck
+    - errorlint
+    - funlen
+    - gocognit
+    - gocyclo
+    - govet
+    - ineffassign
+    - loggercheck
+    - nestif
+    - nilerr
+    - noctx
+    - revive
+    - staticcheck
+    - testifylint
+    - unconvert
+    - unused
+    - usestdlibvars
+    - wastedassign
+  settings:
+    gocognit:
+      min-complexity: 30
+    gocyclo:
+      min-complexity: 20
+    funlen:
+      lines: 140
+      statements: 80
+    nestif:
+      min-complexity: 4
+    revive:
+      rules:
+        - name: early-return
+          severity: warning
+        - name: indent-error-flow
+          severity: warning
+        - name: superfluous-else
+          severity: warning
+        - name: function-result-limit
+          severity: warning
+          arguments: [3]
+    testifylint:
+      enable:
+        - bool-compare
+        - compares
+        - empty
+        - error-is-as
+        - error-nil
+        - expected-actual
+        - go-require
+        - len
+        - require-error
+        - suite-broken-parallel
+        - useless-assert
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - funlen
+          - gocognit
+          - gocyclo
+          - nestif
