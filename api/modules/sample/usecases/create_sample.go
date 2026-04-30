@@ -13,7 +13,7 @@ type CreateSampleInput struct {
 	Sample SampleInput
 }
 
-func (u UseCase) CreateSample(ctx context.Context, input CreateSampleInput) (persistence.Sample, error) {
+func (u UseCase) CreateSample(ctx context.Context, input CreateSampleInput) (*persistence.Sample, error) {
 	newSample := persistence.Sample{
 		Name:        input.Sample.Name,
 		Geolocation: database.NewGeolocation(input.Sample.Longitude, input.Sample.Latitude),
@@ -23,8 +23,8 @@ func (u UseCase) CreateSample(ctx context.Context, input CreateSampleInput) (per
 		Select("name", "geolocation").
 		Create(ctx, &newSample)
 	if err != nil {
-		return persistence.Sample{}, err
+		return nil, err
 	}
 
-	return newSample, nil
+	return &newSample, nil
 }

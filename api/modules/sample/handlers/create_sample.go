@@ -31,6 +31,6 @@ func (h Handlers) CreateSampleHandler(ctx context.Context, input *CreateSampleRe
 
 	return &CreateSampleResponse{
 		Status: http.StatusCreated,
-		Body:   contracts.NewSampleDTO(sample),
+		Body:   contracts.NewSampleDTO(*sample),
 	}, nil
 }

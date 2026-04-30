@@ -15,7 +15,7 @@ type UpdateSampleInput struct {
 	Sample SampleInput
 }
 
-func (u UseCase) UpdateSample(ctx context.Context, input UpdateSampleInput) (persistence.Sample, error) {
+func (u UseCase) UpdateSample(ctx context.Context, input UpdateSampleInput) (*persistence.Sample, error) {
 	updatedSample := persistence.Sample{
 		Id:          input.Id,
 		Name:        input.Sample.Name,
@@ -28,10 +28,10 @@ func (u UseCase) UpdateSample(ctx context.Context, input UpdateSampleInput) (per
 		Where("id = ?", input.Id).
 		Updates(&updatedSample)
 	if result.Error != nil {
-		return persistence.Sample{}, result.Error
+		return nil, result.Error
 	}
 	if result.RowsAffected == 0 {
-		return persistence.Sample{}, sampleErrors.ErrSampleNotFound
+		return nil, sampleErrors.ErrSampleNotFound
 	}
-	return updatedSample, nil
+	return &updatedSample, nil
 }

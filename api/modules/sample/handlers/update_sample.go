@@ -31,6 +31,6 @@ func (h Handlers) UpdateSampleHandler(ctx context.Context, input *UpdateSampleRe
 	}
 
 	return &UpdateSampleResponse{
-		Body: contracts.NewSampleDTO(sample),
+		Body: contracts.NewSampleDTO(*sample),
 	}, nil
 }
