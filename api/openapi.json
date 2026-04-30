@@ -139,6 +139,15 @@
       "SampleDTO": {
         "additionalProperties": false,
         "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "https://example.com/schemas/SampleDTO.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
           "createdAt": {
             "format": "date-time",
             "readOnly": true,
@@ -149,6 +158,18 @@
             "readOnly": true,
             "type": "string"
           },
+          "latitude": {
+            "format": "double",
+            "maximum": 90,
+            "minimum": -90,
+            "type": "number"
+          },
+          "longitude": {
+            "format": "double",
+            "maximum": 180,
+            "minimum": -180,
+            "type": "number"
+          },
           "name": {
             "minLength": 1,
             "type": "string"
@@ -157,7 +178,45 @@
         "required": [
           "id",
           "name",
+          "latitude",
+          "longitude",
           "createdAt"
+        ],
+        "type": "object"
+      },
+      "SampleInputDTO": {
+        "additionalProperties": false,
+        "properties": {
+          "$schema": {
+            "description": "A URL to the JSON Schema for this object.",
+            "examples": [
+              "https://example.com/schemas/SampleInputDTO.json"
+            ],
+            "format": "uri",
+            "readOnly": true,
+            "type": "string"
+          },
+          "latitude": {
+            "format": "double",
+            "maximum": 90,
+            "minimum": -90,
+            "type": "number"
+          },
+          "longitude": {
+            "format": "double",
+            "maximum": 180,
+            "minimum": -180,
+            "type": "number"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "latitude",
+          "longitude"
         ],
         "type": "object"
       }
@@ -232,6 +291,45 @@
         "tags": [
           "Samples"
         ]
+      },
+      "post": {
+        "operationId": "create-sample",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleInputDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleDTO"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Create Sample",
+        "tags": [
+          "Samples"
+        ]
       }
     },
     "/samples/nearby": {
@@ -298,6 +396,131 @@
           }
         },
         "summary": "Get Nearby Samples",
+        "tags": [
+          "Samples"
+        ]
+      }
+    },
+    "/samples/{sampleId}": {
+      "delete": {
+        "operationId": "delete-sample",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sampleId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Delete Sample",
+        "tags": [
+          "Samples"
+        ]
+      },
+      "put": {
+        "operationId": "update-sample",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sampleId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleInputDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        },
+        "summary": "Update Sample",
         "tags": [
           "Samples"
         ]

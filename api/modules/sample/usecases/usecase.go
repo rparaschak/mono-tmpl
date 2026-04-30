@@ -5,3 +5,9 @@ import "github.com/rparaschak/mono-tmpl/api/modules"
 type UseCase struct {
 	modules.GlobalDependencies
 }
+
+type SampleInput struct {
+	Name      string
+	Latitude  float64
+	Longitude float64
+}

@@ -46,6 +46,7 @@ modules/[module]/
 - Keep usecase inputs transport-agnostic; do not add `json`, schema, or HTTP-specific tags to `usecases/` types.
 - Do not import `contracts/` into usecases; map transport DTOs before the usecase boundary.
 - Prefer explicit `Input` structs for command-style usecases over accepting `models.Model`.
+- Do not create `Input` structs that only wrap a single primitive value or ID; accept that value directly, e.g. `DeleteSample(ctx, sampleId uuid.UUID)`.
 - Accept `models.Model` only when the whole domain object is truly the business input, not just a convenient field container.
 - Prefer batch usecases over Preload/Join; compose separate usecases instead.
 - Never use JOIN/PRELOAD on models from another module; use batch instead.
