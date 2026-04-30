@@ -15,7 +15,7 @@ func TestNewUsesCodeProvidedConfig(t *testing.T) {
 		},
 	}
 
-	application := New(cfg)
+	application := New(cfg, nil)
 
 	if application.Config != cfg {
 		t.Fatalf("Config = %#v, want %#v", application.Config, cfg)

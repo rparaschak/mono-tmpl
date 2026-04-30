@@ -4,25 +4,30 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/danielgtaylor/huma/v2"
+
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
+	"github.com/rparaschak/mono-tmpl/api/pkg/httpapi"
 )
 
 type App struct {
 	Config config.Config
+	API    huma.API
 	Server *http.Server
 }
 
-func New(cfg config.Config) *App {
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusNoContent)
-	})
+func New(cfg config.Config, registerRoutes httpapi.RouteRegistrar) *App {
+	router, api := httpapi.NewRouter()
+	if registerRoutes != nil {
+		registerRoutes(api)
+	}
 
 	return &App{
 		Config: cfg,
+		API:    api,
 		Server: &http.Server{
 			Addr:    fmt.Sprintf(":%d", cfg.HTTPServer.Port),
-			Handler: mux,
+			Handler: router,
 		},
 	}
 }

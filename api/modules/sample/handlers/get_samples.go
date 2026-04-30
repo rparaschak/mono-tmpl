@@ -2,13 +2,7 @@ package handlers
 
 import "context"
 
-type GetSamplesRequest struct {
-	Body GetSamplesRequestBody
-}
-
-type GetSamplesRequestBody struct {
-	Prefix string `json:"prefix"`
-}
+type GetSamplesRequest struct{}
 
 type GetSamplesResponse struct {
 	Body GetSamplesResponseBody
