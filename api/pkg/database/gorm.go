@@ -17,7 +17,7 @@ type Config struct {
 	Env                string        `env:"APP_ENV"              envDefault:"local"`
 }
 
-func New(config Config) *gorm.DB {
+func New(config Config) (*gorm.DB, error) {
 	var gormLogger logger.Interface
 	switch config.Env {
 	case "autotest":
@@ -33,16 +33,16 @@ func New(config Config) *gorm.DB {
 		TranslateError: true,
 	})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	sqlDB.SetMaxIdleConns(config.MaxIdleConnections)
 	sqlDB.SetMaxOpenConns(config.MaxConnections)
 	sqlDB.SetConnMaxLifetime(config.MaxLifetime)
 
-	return db
+	return db, nil
 }

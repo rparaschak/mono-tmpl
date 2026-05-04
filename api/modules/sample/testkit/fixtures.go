@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/rparaschak/mono-tmpl/api/modules"
+	"github.com/rparaschak/mono-tmpl/api/internal/dependencies"
 	"github.com/rparaschak/mono-tmpl/api/modules/sample/contracts"
 	"github.com/rparaschak/mono-tmpl/api/modules/sample/persistence"
 	"github.com/rparaschak/mono-tmpl/api/modules/sample/usecases"
@@ -19,12 +19,12 @@ import (
 type SamplesFactory struct {
 	t      *testing.T
 	ctx    context.Context
-	deps   modules.GlobalDependencies
+	deps   dependencies.Dependencies
 	prefix string
 	seq    int
 }
 
-func NewSamplesFactory(t *testing.T, deps modules.GlobalDependencies) *SamplesFactory {
+func NewSamplesFactory(t *testing.T, deps dependencies.Dependencies) *SamplesFactory {
 	t.Helper()
 
 	return &SamplesFactory{
@@ -46,7 +46,7 @@ func (f *SamplesFactory) Create(input contracts.SampleInputDTO) persistence.Samp
 	f.t.Helper()
 
 	input.Name = f.UniqueName(input.Name)
-	sampleUseCases := &usecases.UseCase{GlobalDependencies: f.deps}
+	sampleUseCases := &usecases.UseCase{Dependencies: f.deps}
 	sample, err := sampleUseCases.CreateSample(f.ctx, usecases.CreateSampleInput{
 		Sample: usecases.SampleInput{
 			Name:      input.Name,

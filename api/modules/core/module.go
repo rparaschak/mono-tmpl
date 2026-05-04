@@ -1,27 +1,21 @@
-package sample
+package core
 
 import (
 	"github.com/danielgtaylor/huma/v2"
 
 	"github.com/rparaschak/mono-tmpl/api/internal/dependencies"
-	"github.com/rparaschak/mono-tmpl/api/modules/sample/handlers"
-	"github.com/rparaschak/mono-tmpl/api/modules/sample/usecases"
+	"github.com/rparaschak/mono-tmpl/api/modules/core/handlers"
 )
 
 type Module struct {
 	Deps     dependencies.Dependencies
-	UseCases *usecases.UseCase
 	Handlers *handlers.Handlers
 }
 
 func New(deps dependencies.Dependencies) *Module {
-	useCases := &usecases.UseCase{Dependencies: deps}
 	return &Module{
 		Deps:     deps,
-		UseCases: useCases,
-		Handlers: &handlers.Handlers{
-			UseCases: useCases,
-		},
+		Handlers: &handlers.Handlers{},
 	}
 }
 

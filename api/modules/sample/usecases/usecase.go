@@ -1,9 +1,9 @@
 package usecases
 
-import "github.com/rparaschak/mono-tmpl/api/modules"
+import "github.com/rparaschak/mono-tmpl/api/internal/dependencies"
 
 type UseCase struct {
-	modules.GlobalDependencies
+	dependencies.Dependencies
 }
 
 type SampleInput struct {

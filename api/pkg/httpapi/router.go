@@ -11,9 +11,6 @@ type RouteRegistrar func(huma.API)
 
 func NewRouter() (*http.ServeMux, huma.API) {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusNoContent)
-	})
 
 	api := humago.New(mux, huma.DefaultConfig("Monorepo Template API", "1.0.0"))
 
