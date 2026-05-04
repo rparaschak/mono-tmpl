@@ -13,6 +13,7 @@ import (
 	"github.com/rparaschak/mono-tmpl/api/internal/dependencies"
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
 	"github.com/rparaschak/mono-tmpl/api/pkg/httpapi"
+	"github.com/rparaschak/mono-tmpl/api/pkg/mcpapi"
 )
 
 type App struct {
@@ -34,6 +35,9 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 
 	modules := NewModules(deps)
 	modules.RegisterHTTP(api)
+
+	mcpServer := mcpapi.NewServer("Monorepo Template MCP", "1.0.0", modules.RegisterMCP)
+	mcpapi.Mount(router, "/mcp", mcpServer)
 
 	return &App{
 		Config:  cfg,

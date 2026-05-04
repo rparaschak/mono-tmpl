@@ -1,6 +1,8 @@
-package handlers
+package mcp
 
-import "github.com/rparaschak/mono-tmpl/api/modules/sample/usecases"
+import (
+	"github.com/rparaschak/mono-tmpl/api/modules/sample/usecases"
+)
 
 type Handlers struct {
 	UseCases *usecases.UseCase
