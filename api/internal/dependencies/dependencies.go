@@ -13,7 +13,7 @@ import (
 type Dependencies struct {
 	Config  config.Config
 	DB      *gorm.DB
-	Storage storage.Service
+	Storage *storage.Storage
 }
 
 func New(ctx context.Context, cfg config.Config) (Dependencies, error) {
@@ -27,15 +27,21 @@ func New(ctx context.Context, cfg config.Config) (Dependencies, error) {
 	}
 }
 
-func NewEnv(_ context.Context, cfg config.Config) (Dependencies, error) {
+func NewEnv(cfg config.Config) (Dependencies, error) {
 	db, err := database.New(cfg.Database)
 	if err != nil {
 		return Dependencies{}, err
 	}
 
+	storageClient, err := storage.New(cfg.Storage, cfg.Storage.Buckets)
+	if err != nil {
+		return Dependencies{}, err
+	}
+
 	return Dependencies{
-		Config: cfg,
-		DB:     db,
+		Config:  cfg,
+		DB:      db,
+		Storage: storageClient,
 	}, nil
 }
 

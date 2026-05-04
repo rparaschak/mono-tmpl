@@ -4,11 +4,13 @@ import (
 	"github.com/caarlos0/env/v11"
 
 	"github.com/rparaschak/mono-tmpl/api/pkg/database"
+	"github.com/rparaschak/mono-tmpl/api/pkg/storage"
 )
 
 type Config struct {
 	HTTPServer HTTPServerConfig
 	Database   database.Config
+	Storage    storage.Config
 }
 
 type HTTPServerConfig struct {
