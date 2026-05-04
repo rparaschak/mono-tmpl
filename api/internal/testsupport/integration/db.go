@@ -3,13 +3,13 @@ package integration
 import (
 	"context"
 	"net/http"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/gavv/httpexpect/v2"
 	"github.com/rparaschak/mono-tmpl/api/internal/app"
 	"github.com/rparaschak/mono-tmpl/api/internal/dependencies"
+	"github.com/rparaschak/mono-tmpl/api/pkg/appenv"
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
 	"github.com/stretchr/testify/require"
 )
@@ -53,7 +53,7 @@ func NewAutotestDependencies(t *testing.T) dependencies.Dependencies {
 	t.Helper()
 
 	cfg := NewAutotestConfig(t)
-	deps, err := dependencies.NewAutotest(context.Background(), cfg)
+	deps, err := dependencies.New(context.Background(), cfg)
 	require.NoError(t, err, "autotest dependencies should initialize")
 	t.Cleanup(func() {
 		require.NoError(t, deps.Close(), "autotest dependencies should close cleanly")
@@ -65,14 +65,11 @@ func NewAutotestDependencies(t *testing.T) dependencies.Dependencies {
 func NewAutotestConfig(t *testing.T) config.Config {
 	t.Helper()
 
-	databaseURL := os.Getenv("DATABASE_URL")
-	require.NotEmpty(t, databaseURL, "DATABASE_URL must be set for integration tests")
-
 	cfg, err := config.Load()
 	require.NoError(t, err, "autotest config should load")
-	cfg.HTTPServer.Env = "autotest"
-	cfg.Database.Env = "autotest"
-	cfg.Database.URL = databaseURL
+	require.Equal(t, appenv.Autotest, cfg.HTTPServer.Env, "APP_ENV must be set to autotest for integration tests")
+	require.Equal(t, appenv.Autotest, cfg.Database.Env, "APP_ENV must populate database config for integration tests")
+	require.NotEmpty(t, cfg.Database.URL, "DATABASE_URL must be set for integration tests")
 
 	return cfg
 }

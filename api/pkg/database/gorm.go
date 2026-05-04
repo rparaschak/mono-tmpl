@@ -3,6 +3,7 @@ package database
 import (
 	"time"
 
+	"github.com/rparaschak/mono-tmpl/api/pkg/appenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -20,9 +21,9 @@ type Config struct {
 func New(config Config) (*gorm.DB, error) {
 	var gormLogger logger.Interface
 	switch config.Env {
-	case "autotest":
+	case appenv.Autotest:
 		gormLogger = logger.Default.LogMode(logger.Silent)
-	case "local":
+	case appenv.Local:
 		gormLogger = logger.Default.LogMode(logger.Info)
 	default:
 		gormLogger = logger.Default.LogMode(logger.Warn)

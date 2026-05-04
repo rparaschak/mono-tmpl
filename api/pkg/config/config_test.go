@@ -1,6 +1,10 @@
 package config
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/rparaschak/mono-tmpl/api/pkg/appenv"
+)
 
 func TestLoadHTTPServerFromEnv(t *testing.T) {
 	t.Setenv("APP_ENV", "test")
@@ -33,8 +37,8 @@ func TestLoadHTTPServerDefaults(t *testing.T) {
 		t.Fatalf("Load() error = %v", err)
 	}
 
-	if cfg.HTTPServer.Env != "local" {
-		t.Fatalf("HTTPServer.Env = %q, want %q", cfg.HTTPServer.Env, "local")
+	if cfg.HTTPServer.Env != appenv.Local {
+		t.Fatalf("HTTPServer.Env = %q, want %q", cfg.HTTPServer.Env, appenv.Local)
 	}
 
 	if cfg.HTTPServer.Port != 5001 {

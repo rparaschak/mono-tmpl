@@ -3,6 +3,7 @@ package dependencies
 import (
 	"context"
 
+	"github.com/rparaschak/mono-tmpl/api/pkg/appenv"
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
 	"github.com/rparaschak/mono-tmpl/api/pkg/database"
 	"github.com/rparaschak/mono-tmpl/api/pkg/storage"
@@ -17,9 +18,9 @@ type Dependencies struct {
 
 func New(ctx context.Context, cfg config.Config) (Dependencies, error) {
 	switch cfg.HTTPServer.Env {
-	case "autotest":
+	case appenv.Autotest:
 		return NewAutotest(ctx, cfg)
-	case "local":
+	case appenv.Local:
 		return NewLocal(ctx, cfg)
 	default:
 		return NewDefault(ctx, cfg)

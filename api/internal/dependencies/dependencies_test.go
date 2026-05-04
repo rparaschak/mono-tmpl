@@ -4,13 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/rparaschak/mono-tmpl/api/pkg/appenv"
 	"github.com/rparaschak/mono-tmpl/api/pkg/config"
 )
 
 func TestNewReturnsDatabaseErrors(t *testing.T) {
 	cfg := config.Config{
 		HTTPServer: config.HTTPServerConfig{
-			Env: "autotest",
+			Env: appenv.Autotest,
 		},
 	}
 
